@@ -1,73 +1,75 @@
 <?php
 
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db = "utesa";
+$conexion = mysqli_connect("localhost", "root", "", "utesa");
 
-$conn = mysqli_connect($host, $user, $pass, $db);
-
-if (!$conn) {
-    echo "Error de conexion";
+if (!$conexion) {
+    echo "Error al conectar con la base de datos";
     exit;
 }
 
-if (isset($_POST['btnGuardar'])) {
+if (isset($_POST['guardar'])) {
 
-    $nombreUser = $_POST['nombre'];
-    $correoUser = $_POST['correo'];
-    $edadUser = $_POST['edad'];
+    $nombre = $_POST['nombre'];
+    $apellido = $_POST['apellido'];
+    $correo = $_POST['correo'];
+    $telefono = $_POST['telefono'];
+    $matricula = $_POST['matricula'];
 
-    $insertar = "INSERT INTO usuarios (nombre, correo, edad) 
-                 VALUES ('$nombreUser', '$correoUser', '$edadUser')";
+    $sql = "INSERT INTO estudiante (nombre, apellido, correo, telefono, matricula) 
+            VALUES ('$nombre', '$apellido', '$correo', '$telefono', '$matricula')";
 
-    $guardar = mysqli_query($conn, $insertar);
-
-    if ($guardar) {
-        echo "<p style='text-align:center; color:green;'>Datos guardados</p>";
+    if (mysqli_query($conexion, $sql)) {
+        $mensaje = "Datos guardados correctamente";
     } else {
-        echo "<p style='text-align:center; color:red;'>No se pudo guardar</p>";
+        $mensaje = "Error al guardar";
     }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <title>Registro</title>
+    <title>Registro de Estudiantes</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body style="background: linear-gradient(135deg, #667eea, #764ba2);">
+<body style="background: linear-gradient(to right, #8360c3, #2ebf91);">
 
-    <div class="d-flex justify-content-center align-items-center" style="height:100vh;">
+<div class="container d-flex justify-content-center align-items-center" style="height:100vh;">
 
-        <div
-            style="background:white; padding:30px; border-radius:12px; width:350px; box-shadow:0px 0px 15px rgba(0,0,0,0.2);">
+    <div class="bg-white p-4 rounded shadow" style="width:400px;">
 
-            <h4 style="text-align:center; margin-bottom:20px;">Nuevo Usuario</h4>
+        <h3 class="text-center mb-4">Registro de Estudiantes</h3>
 
-            <form method="POST">
+        <?php
+        if (isset($mensaje)) {
+            echo "<div class='alert alert-info text-center'>$mensaje</div>";
+        }
+        ?>
 
-                <input type="text" name="nombre" class="form-control mb-3" placeholder="Nombre completo" required>
+        <form method="POST">
 
-                <input type="email" name="correo" class="form-control mb-3" placeholder="Correo electrónico" required>
+            <input type="text" name="nombre" class="form-control mb-3" placeholder="Nombre" required>
 
-                <input type="number" name="edad" class="form-control mb-3" placeholder="Edad" required>
+            <input type="text" name="apellido" class="form-control mb-3" placeholder="Apellido" required>
 
-                <button type="submit" name="btnGuardar" class="btn w-100" style="background:#764ba2; color:white;">
-                    Guardar información
-                </button>
+            <input type="email" name="correo" class="form-control mb-3" placeholder="Correo electrónico" required>
 
-            </form>
+            <input type="text" name="telefono" class="form-control mb-3" placeholder="Teléfono" required>
 
-        </div>
+            <input type="text" name="matricula" class="form-control mb-3" placeholder="Matrícula" required>
+
+            <button type="submit" name="guardar" class="btn btn-dark w-100">
+                Guardar
+            </button>
+
+        </form>
 
     </div>
 
-</body>
+</div>
 
+</body>
 </html>
